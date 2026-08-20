@@ -1,27 +1,21 @@
-/* 67 PIXEL HERO + COIN BUTTON */
-.character{position:relative;width:300px;height:210px;margin:0 auto 28px;display:flex;align-items:center;justify-content:center;flex:0 0 210px;visibility:visible;opacity:1;z-index:10;transform-origin:center;filter:drop-shadow(0 18px 30px var(--glow));animation:pixelFloat 2.8s ease-in-out infinite;--pixel1:#a77cff;--pixel2:#6b3eea;--pixel3:#d5c2ff;--glow:rgba(129,87,255,.55)}
-.character-glow{position:absolute;width:220px;height:120px;border-radius:50%;background:var(--glow);filter:blur(42px);opacity:.7;pointer-events:none}
-.pixel-67{position:relative;font-family:"Courier New",monospace;font-weight:1000;font-size:clamp(105px,18vw,155px);line-height:.8;letter-spacing:-18px;padding-right:18px;color:var(--pixel3);-webkit-text-stroke:5px #171225;text-shadow:8px 8px 0 #171225,0 0 8px var(--pixel3),0 0 28px var(--glow),0 0 55px var(--glow);image-rendering:pixelated;filter:drop-shadow(0 10px 0 rgba(0,0,0,.2));z-index:2}
-.pixel-67:before{content:"";position:absolute;inset:12% 5%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.2) 0 5px,transparent 5px 13px);mix-blend-mode:screen;opacity:.5;pointer-events:none}
-.character.classic{--pixel1:#a77cff;--pixel2:#6b3eea;--pixel3:#e0d2ff;--glow:rgba(129,87,255,.6)}
-.character.neon{--pixel1:#ff68e5;--pixel2:#b91ddd;--pixel3:#ffd5f7;--glow:rgba(255,49,215,.75)}
-.character.cyber{--pixel1:#68f2ff;--pixel2:#159fc9;--pixel3:#d8fbff;--glow:rgba(24,223,255,.75)}
-.character.galaxy{--pixel1:#b08aff;--pixel2:#4121b7;--pixel3:#f0e8ff;--glow:rgba(116,69,255,.8)}
-.character.golden{--pixel1:#fff09a;--pixel2:#d98b00;--pixel3:#fff8c7;--glow:rgba(255,198,46,.8)}
-.character.clicking{animation:pixelClick .3s cubic-bezier(.2,.9,.25,1.2)!important}
-@keyframes pixelFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@keyframes pixelClick{0%{transform:scale(1) translateY(0)}30%{transform:scale(.9,.82) translateY(10px)}55%{transform:scale(1.08,1.12) translateY(-10px)}100%{transform:scale(1) translateY(0)}}
-/* REMOVE OLD CHARACTER PARTS IF THEY EXIST */
-.character-head,.character-body,.character-arm,.character-leg,.character .symbol{display:none!important}
-/* CLICK BUTTON WITH 67 COIN */
-.click-button{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:12px;min-height:78px!important;border:2px solid rgba(255,240,160,.7)!important;border-radius:26px!important;background:linear-gradient(145deg,#ffe97a 0%,#ffc52e 38%,#e18a00 72%,#a95700 100%)!important;color:#3b2100!important;font-size:22px!important;font-weight:1000!important;letter-spacing:.7px;text-shadow:0 1px rgba(255,255,255,.35);box-shadow:0 10px 0 #754000,0 20px 38px rgba(255,177,28,.32),inset 0 3px 0 rgba(255,255,255,.65),inset 0 -7px 12px rgba(112,55,0,.2)!important;transform:translateY(0);transition:transform .12s,box-shadow .12s,filter .12s!important;animation:coinButtonPulse 2s ease-in-out infinite}
-.coin-button-icon{position:relative;width:52px;height:52px;flex:0 0 52px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-family:Arial,sans-serif;font-size:20px;font-weight:1000;color:#8a4b00;background:radial-gradient(circle at 32% 25%,#fffbd1 0 8%,#ffe66b 18%,#ffc52e 55%,#d77b00 100%);border:4px solid #fff0a1;box-shadow:inset 0 3px 5px rgba(255,255,255,.8),inset 0 -4px 6px rgba(126,63,0,.25),0 0 0 2px rgba(122,64,0,.35),0 4px 10px rgba(100,50,0,.3);text-shadow:0 1px #fff0a1}
-.coin-button-icon:before{content:"";position:absolute;inset:5px;border:2px solid rgba(159,91,0,.35);border-radius:50%}
-.coin-button-icon:after{content:"";position:absolute;top:7px;left:10px;width:15px;height:6px;border-radius:50%;background:rgba(255,255,255,.65);transform:rotate(-25deg)}
-.click-button:before{content:"";position:absolute;inset:4px;border-radius:21px;background:linear-gradient(120deg,rgba(255,255,255,.25),transparent 35%,transparent 65%,rgba(255,255,255,.08));pointer-events:none}
-.click-button:after{content:"";position:absolute;top:-80%;left:-35%;width:38%;height:260%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);transform:rotate(20deg);animation:coinShine 2.8s linear infinite;pointer-events:none}
-.click-button:hover{transform:translateY(-3px) scale(1.02)!important;filter:brightness(1.06) saturate(1.1);box-shadow:0 13px 0 #754000,0 25px 44px rgba(255,177,28,.42),inset 0 3px 0 rgba(255,255,255,.7),inset 0 -7px 12px rgba(112,55,0,.2)!important}
-.click-button:active{transform:translateY(8px) scale(.96)!important;box-shadow:0 3px 0 #754000,0 8px 18px rgba(100,50,0,.25),inset 0 3px 0 rgba(255,255,255,.45)!important;animation:none}
-@keyframes coinButtonPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.06)}}@keyframes coinShine{0%{left:-45%;opacity:0}12%{opacity:1}32%,100%{left:130%;opacity:0}}
-.click-flash{animation:coinClickFlash .25s ease-out!important}@keyframes coinClickFlash{0%{filter:brightness(1)}35%{filter:brightness(1.35) saturate(1.3)}100%{filter:brightness(1)}}
-@media(max-width:700px){.character{width:260px;height:175px;flex-basis:175px;margin-bottom:12px}.pixel-67{font-size:105px;letter-spacing:-14px;-webkit-text-stroke:4px #171225;text-shadow:6px 6px 0 #171225,0 0 7px var(--pixel3),0 0 30px var(--glow)}.click-button{min-height:70px!important;font-size:19px!important;border-radius:23px!important;box-shadow:0 8px 0 #754000,0 16px 30px rgba(255,177,28,.32),inset 0 3px 0 rgba(255,255,255,.65),inset 0 -7px 12px rgba(112,55,0,.2)!important}.coin-button-icon{width:48px;height:48px;flex-basis:48px;font-size:18px}}
+/* PIXEL 67 HERO */
+.character{position:relative;width:280px;height:220px;margin:0 auto 24px;flex:0 0 220px;display:flex;align-items:center;justify-content:center;visibility:visible;opacity:1;z-index:10;filter:drop-shadow(0 18px 24px var(--glow));animation:pixelFloat 2.8s steps(2,end) infinite;--pixel:#8157ff;--dark:#28135f;--glow:rgba(129,87,255,.55)}
+.character:before{content:"67";font-family:"Courier New",monospace;font-weight:900;font-size:clamp(110px,18vw,170px);line-height:.8;letter-spacing:-18px;color:var(--pixel);-webkit-text-stroke:10px var(--dark);paint-order:stroke fill;text-shadow:10px 10px 0 #160b36,0 0 0 var(--pixel),0 0 28px var(--glow);image-rendering:pixelated;transform:scaleX(.92);}
+.character:after{content:"";position:absolute;width:145px;height:12px;bottom:28px;left:50%;transform:translateX(-50%);background:var(--pixel);box-shadow:0 0 22px var(--glow);opacity:.35;image-rendering:pixelated}
+.character>*{display:none!important}
+.character.classic{--pixel:#9b72ff;--dark:#321777;--glow:rgba(129,87,255,.7)}
+.character.neon{--pixel:#ff43d7;--dark:#6e126e;--glow:rgba(255,67,215,.8)}
+.character.cyber{--pixel:#35e8ff;--dark:#063c5d;--glow:rgba(53,232,255,.8)}
+.character.galaxy{--pixel:#a178ff;--dark:#171052;--glow:rgba(116,69,255,.85)}
+.character.golden{--pixel:#ffd34d;--dark:#754000;--glow:rgba(255,211,77,.85)}
+.character.clicking{animation:pixelClick .28s steps(3,end)!important}
+@keyframes pixelFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pixelClick{0%{transform:scale(1)}33%{transform:scale(.9) translateY(5px)}66%{transform:scale(1.08) translateY(-7px)}100%{transform:scale(1)}}
+/* 67 COIN CLICK BUTTON */
+.click-button{position:relative;isolation:isolate;overflow:hidden;display:flex!important;align-items:center;justify-content:center;gap:12px;min-height:76px;border:3px solid #fff0a0!important;border-radius:24px!important;background:linear-gradient(145deg,#ffe98a,#ffc52f 48%,#d88a00)!important;color:#5b3500!important;font-size:0!important;font-weight:1000!important;box-shadow:0 8px 0 #8d5300,0 18px 35px rgba(216,138,0,.4),inset 0 3px 0 rgba(255,255,255,.75),inset 0 -5px 10px rgba(123,65,0,.18)!important;transition:transform .12s,box-shadow .12s,filter .12s!important;animation:coinPulse 2s ease-in-out infinite}
+.click-button:before{content:"67";position:relative;z-index:3;width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(145deg,#fff3a5,#ffd34d 45%,#d99100);border:3px solid #9a5d00;color:#7b4800;font-family:"Courier New",monospace;font-size:18px;font-weight:900;letter-spacing:-2px;text-shadow:1px 1px 0 #fff0a0;box-shadow:inset 0 3px 4px rgba(255,255,255,.7),0 3px 0 #a66300,0 0 18px rgba(255,211,77,.55);}
+.click-button:after{content:"КЛИК";position:absolute;right:22px;z-index:3;font-family:Inter,Arial,sans-serif;font-size:18px;font-weight:1000;letter-spacing:1px;color:#6d4200}
+.click-button:hover{transform:translateY(-3px) scale(1.02)!important;filter:brightness(1.06);box-shadow:0 11px 0 #8d5300,0 24px 42px rgba(216,138,0,.48),inset 0 3px 0 rgba(255,255,255,.8)!important}
+.click-button:active{transform:translateY(7px) scale(.96)!important;box-shadow:0 2px 0 #8d5300,0 8px 16px rgba(216,138,0,.3)!important;animation:none}
+@keyframes coinPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.08)}}
+@media(max-width:700px){.character{width:260px;height:190px;flex-basis:190px}.character:before{font-size:120px;-webkit-text-stroke:8px var(--dark);letter-spacing:-14px}.click-button{min-height:68px;border-radius:21px!important}.click-button:before{width:44px;height:44px}.click-button:after{font-size:16px;right:18px}}
