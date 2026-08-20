@@ -77,10 +77,8 @@ function flapFlight() {
 
 function flightLoop(time) {
     if (!flight.active) return;
-
     const dt = Math.min((time - flight.lastTime) / 1000, 0.035);
     flight.lastTime = time;
-
     updateFlight(dt);
     drawFlight();
     flight.animationId = requestAnimationFrame(flightLoop);
@@ -90,41 +88,28 @@ function updateFlight(dt) {
     const speed = 210 + Math.min(flight.distance * 0.8, 230);
     const height = flightCanvas.clientHeight;
     const width = flightCanvas.clientWidth;
-
     flight.velocity += 1150 * dt;
     flight.y += flight.velocity * dt;
     flight.distance += speed * dt / 10;
     flight.score = Math.floor(flight.distance);
-
     flight.spawnTimer -= dt;
     flight.coinTimer -= dt;
-
     if (flight.spawnTimer <= 0) {
         spawnFlightObstacle(width, height);
         flight.spawnTimer = Math.max(0.72, 1.25 - flight.distance / 2500);
     }
-
     if (flight.coinTimer <= 0) {
-        flight.coins.push({
-            x: width + 40,
-            y: 60 + Math.random() * (height - 120),
-            r: 11,
-            taken: false
-        });
+        flight.coins.push({ x: width + 40, y: 60 + Math.random() * (height - 120), r: 11, taken: false });
         flight.coinTimer = 0.75;
     }
-
     flight.obstacles.forEach(o => o.x -= speed * dt);
     flight.coins.forEach(c => c.x -= speed * dt);
-
     flight.obstacles = flight.obstacles.filter(o => o.x + o.width > -30);
     flight.coins = flight.coins.filter(c => c.x > -30 && !c.taken);
-
     if (flight.y < 20 || flight.y > height - 20 || hitFlightObstacle()) {
         endFlight();
         return;
     }
-
     collectFlightCoins();
     updateFlightHud();
 }
@@ -133,18 +118,11 @@ function spawnFlightObstacle(width, height) {
     const gap = Math.max(125, 185 - flight.distance * 0.035);
     const center = 80 + Math.random() * (height - 160);
     const obstacleWidth = 48;
-
-    flight.obstacles.push({
-        x: width + obstacleWidth,
-        width: obstacleWidth,
-        top: center - gap / 2,
-        bottom: center + gap / 2
-    });
+    flight.obstacles.push({ x: width + obstacleWidth, width: obstacleWidth, top: center - gap / 2, bottom: center + gap / 2 });
 }
 
 function hitFlightObstacle() {
-    const player = { x: flight.x - 18, y: flight.y - 16, width: 36, height: 32 };
-
+    const player = { x: flight.x - 20, y: flight.y - 13, width: 42, height: 26 };
     return flight.obstacles.some(o => {
         const hitX = player.x + player.width > o.x && player.x < o.x + o.width;
         const hitTop = player.y < o.top;
@@ -157,7 +135,7 @@ function collectFlightCoins() {
     flight.coins.forEach(c => {
         const dx = c.x - flight.x;
         const dy = c.y - flight.y;
-        if (Math.sqrt(dx * dx + dy * dy) < 28) {
+        if (Math.sqrt(dx * dx + dy * dy) < 30) {
             c.taken = true;
             flight.score += 25;
         }
@@ -167,12 +145,10 @@ function collectFlightCoins() {
 function endFlight() {
     flight.active = false;
     cancelAnimationFrame(flight.animationId);
-
     if (flight.score > flight.best) {
         flight.best = flight.score;
         localStorage.setItem("67_flight_best", String(flight.best));
     }
-
     const reward = Math.max(50, Math.floor(flight.score * 2));
     game.coins += reward;
     game.totalEarned += reward;
@@ -180,7 +156,6 @@ function endFlight() {
     updateGame();
     updateFlightHud();
     drawFlight();
-
     notify("✈️ Полёт окончен! +" + reward + " 67");
 }
 
@@ -204,84 +179,201 @@ function getFlightColors() {
 
 function drawFlight() {
     if (!flightCtx || !flightCanvas) return;
-
     const w = flightCanvas.clientWidth;
     const h = flightCanvas.clientHeight;
     const colors = getFlightColors();
-
     const gradient = flightCtx.createLinearGradient(0, 0, 0, h);
     gradient.addColorStop(0, "#110b2d");
     gradient.addColorStop(1, "#090714");
     flightCtx.fillStyle = gradient;
     flightCtx.fillRect(0, 0, w, h);
-
-    flightCtx.fillStyle = "rgba(255,255,255,.65)";
-    for (let i = 0; i < 35; i++) {
-        const x = (i * 83 + Math.floor(flight.distance * 3)) % w;
-        const y = (i * 47) % h;
-        flightCtx.fillRect(x, y, 2, 2);
-    }
-
-    flight.obstacles.forEach(o => {
-        flightCtx.fillStyle = colors[1];
-        flightCtx.shadowColor = colors[1];
-        flightCtx.shadowBlur = 14;
-        flightCtx.fillRect(o.x, 0, o.width, o.top);
-        flightCtx.fillRect(o.x, o.bottom, o.width, h - o.bottom);
-        flightCtx.shadowBlur = 0;
-    });
-
-    flight.coins.forEach(c => {
-        flightCtx.beginPath();
-        flightCtx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-        flightCtx.fillStyle = "#ffd34d";
-        flightCtx.shadowColor = "#ffd34d";
-        flightCtx.shadowBlur = 12;
-        flightCtx.fill();
-        flightCtx.shadowBlur = 0;
-        flightCtx.fillStyle = "#5a3700";
-        flightCtx.font = "bold 11px Arial";
-        flightCtx.textAlign = "center";
-        flightCtx.textBaseline = "middle";
-        flightCtx.fillText("67", c.x, c.y);
-    });
-
+    drawFlightStars(w, h);
+    drawFlightAtmosphere(w, h, colors);
+    flight.obstacles.forEach(o => drawFlightGate(o, h, colors));
+    flight.coins.forEach(c => drawFlightCoin(c));
     drawFlightPlayer(colors);
+}
+
+function drawFlightStars(w, h) {
+    const ctx = flightCtx;
+    for (let i = 0; i < 55; i++) {
+        const x = (i * 83 + Math.floor(flight.distance * (2 + i % 3))) % w;
+        const y = (i * 47 + i * i) % h;
+        const size = i % 7 === 0 ? 2 : 1;
+        ctx.fillStyle = i % 9 === 0 ? "rgba(150,210,255,.8)" : "rgba(255,255,255,.5)";
+        ctx.fillRect(x, y, size, size);
+    }
+}
+
+function drawFlightAtmosphere(w, h, colors) {
+    const ctx = flightCtx;
+    const glow = ctx.createRadialGradient(w * .55, h * .45, 10, w * .55, h * .45, Math.max(w, h) * .65);
+    glow.addColorStop(0, colors[1] + "22");
+    glow.addColorStop(1, "transparent");
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = colors[0] + "18";
+    ctx.lineWidth = 1;
+    for (let y = 30; y < h; y += 48) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+    }
+}
+
+function drawFlightGate(o, h, colors) {
+    const ctx = flightCtx;
+    const cap = 10;
+    ctx.save();
+    ctx.shadowColor = colors[1];
+    ctx.shadowBlur = 20;
+    const gate = ctx.createLinearGradient(o.x, 0, o.x + o.width, 0);
+    gate.addColorStop(0, colors[1]);
+    gate.addColorStop(.5, colors[0]);
+    gate.addColorStop(1, colors[1]);
+    ctx.fillStyle = gate;
+    ctx.fillRect(o.x, 0, o.width, o.top);
+    ctx.fillRect(o.x, o.bottom, o.width, h - o.bottom);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "rgba(255,255,255,.35)";
+    ctx.fillRect(o.x + 5, 0, 3, Math.max(0, o.top - cap));
+    ctx.fillRect(o.x + 5, o.bottom + cap, 3, Math.max(0, h - o.bottom - cap));
+    ctx.fillStyle = colors[0];
+    ctx.fillRect(o.x - 4, o.top - cap, o.width + 8, cap);
+    ctx.fillRect(o.x - 4, o.bottom, o.width + 8, cap);
+    ctx.restore();
+}
+
+function drawFlightCoin(c) {
+    const ctx = flightCtx;
+    const pulse = 1 + Math.sin(performance.now() / 180) * .08;
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.scale(pulse, pulse);
+    ctx.shadowColor = "#ffd34d";
+    ctx.shadowBlur = 18;
+    const g = ctx.createRadialGradient(-3, -4, 2, 0, 0, c.r + 3);
+    g.addColorStop(0, "#fff6ad");
+    g.addColorStop(.45, "#ffd34d");
+    g.addColorStop(1, "#d88b00");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = "#fff0a0";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = "#6b4300";
+    ctx.font = "900 10px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("67", 0, 0);
+    ctx.restore();
 }
 
 function drawFlightPlayer(colors) {
     const ctx = flightCtx;
+    const tilt = Math.max(-0.42, Math.min(0.52, flight.velocity / 900));
+    const bob = Math.sin(performance.now() / 110) * 1.5;
     ctx.save();
-    ctx.translate(flight.x, flight.y);
-    ctx.rotate(Math.max(-0.35, Math.min(0.45, flight.velocity / 1000)));
-    ctx.shadowColor = colors[1];
+    ctx.translate(flight.x, flight.y + bob);
+    ctx.rotate(tilt);
+    ctx.imageSmoothingEnabled = true;
+
+    // Engine glow + exhaust
+    const exhaust = ctx.createLinearGradient(-62, 0, -20, 0);
+    exhaust.addColorStop(0, "transparent");
+    exhaust.addColorStop(.45, colors[0] + "88");
+    exhaust.addColorStop(1, colors[0]);
+    ctx.fillStyle = exhaust;
+    ctx.shadowColor = colors[0];
     ctx.shadowBlur = 18;
-
-    ctx.fillStyle = colors[1];
     ctx.beginPath();
-    ctx.roundRect(-23, -16, 46, 32, 12);
+    ctx.moveTo(-20, -5);
+    ctx.lineTo(-68, 0);
+    ctx.lineTo(-20, 5);
+    ctx.closePath();
     ctx.fill();
-
     ctx.shadowBlur = 0;
-    ctx.fillStyle = "#ffd7b5";
-    ctx.beginPath();
-    ctx.arc(8, -2, 11, 0, Math.PI * 2);
-    ctx.fill();
 
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 13px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("67", -4, 4);
-
-    ctx.fillStyle = colors[0];
+    // Rear fuselage
+    const body = ctx.createLinearGradient(-28, -15, 30, 16);
+    body.addColorStop(0, colors[0]);
+    body.addColorStop(.45, colors[1]);
+    body.addColorStop(1, colors[1] + "cc");
+    ctx.fillStyle = body;
     ctx.beginPath();
-    ctx.moveTo(-28, 5);
-    ctx.lineTo(-46, 15);
-    ctx.lineTo(-24, 15);
+    ctx.moveTo(-27, -12);
+    ctx.quadraticCurveTo(-8, -20, 18, -13);
+    ctx.quadraticCurveTo(34, -7, 36, 0);
+    ctx.quadraticCurveTo(34, 7, 18, 13);
+    ctx.quadraticCurveTo(-8, 20, -27, 12);
     ctx.closePath();
     ctx.fill();
 
+    // Main wing
+    ctx.fillStyle = colors[0];
+    ctx.beginPath();
+    ctx.moveTo(-5, -5);
+    ctx.lineTo(-28, -31);
+    ctx.lineTo(8, -18);
+    ctx.lineTo(18, -5);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-5, 5);
+    ctx.lineTo(-28, 31);
+    ctx.lineTo(8, 18);
+    ctx.lineTo(18, 5);
+    ctx.closePath();
+    ctx.fill();
+
+    // Nose
+    ctx.fillStyle = "#f8fbff";
+    ctx.beginPath();
+    ctx.moveTo(15, -11);
+    ctx.quadraticCurveTo(43, 0, 15, 11);
+    ctx.closePath();
+    ctx.fill();
+
+    // Cockpit
+    const glass = ctx.createLinearGradient(5, -10, 20, 4);
+    glass.addColorStop(0, "#e9fcff");
+    glass.addColorStop(.45, colors[0]);
+    glass.addColorStop(1, "#17244e");
+    ctx.fillStyle = glass;
+    ctx.beginPath();
+    ctx.ellipse(7, -5, 12, 7, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.7)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Tail fin
+    ctx.fillStyle = colors[1];
+    ctx.beginPath();
+    ctx.moveTo(-22, -7);
+    ctx.lineTo(-35, -23);
+    ctx.lineTo(-14, -14);
+    ctx.closePath();
+    ctx.fill();
+
+    // 67 emblem
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 10px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("67", -5, 2);
+
+    // Highlight
+    ctx.strokeStyle = "rgba(255,255,255,.65)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-12, -11);
+    ctx.quadraticCurveTo(4, -16, 17, -9);
+    ctx.stroke();
     ctx.restore();
 }
 
@@ -292,15 +384,10 @@ window.addEventListener("resize", () => {
     }
 });
 
-if (flightCanvas) {
-    flightCanvas.addEventListener("pointerdown", flapFlight);
-}
-
+if (flightCanvas) flightCanvas.addEventListener("pointerdown", flapFlight);
 const flightButton = document.getElementById("openFlight");
 if (flightButton) flightButton.addEventListener("click", openFlight);
-
 const closeFlightButton = document.getElementById("closeFlight");
 if (closeFlightButton) closeFlightButton.addEventListener("click", closeFlight);
-
 const restartFlightButton = document.getElementById("restartFlight");
 if (restartFlightButton) restartFlightButton.addEventListener("click", startFlight);
