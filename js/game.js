@@ -6,22 +6,16 @@ loadGame();
 // =========================================
 
 function calculateLevel() {
-
-    return Math.floor(
-        game.experience / 100
-    ) + 1;
+    return Math.floor(game.experience / 100) + 1;
 }
 
 
 function addExperience(amount) {
-
     game.experience += amount;
 
-    const newLevel =
-        calculateLevel();
+    const newLevel = calculateLevel();
 
     if (newLevel > game.level) {
-
         game.level = newLevel;
 
         notify(
@@ -37,25 +31,18 @@ function addExperience(amount) {
 // =========================================
 
 function animateCharacter() {
-
-    const character =
-        document.getElementById("character");
+    const character = document.getElementById("character");
 
     if (!character) {
         return;
     }
 
     character.classList.remove("clicking");
-
-    // Перезапускаем CSS-анимацию
     void character.offsetWidth;
-
     character.classList.add("clicking");
 
     setTimeout(() => {
-
         character.classList.remove("clicking");
-
     }, 200);
 }
 
@@ -65,17 +52,22 @@ function animateCharacter() {
 // =========================================
 
 function updateCharacterSkin() {
-
-    const character =
-        document.getElementById("character");
+    const character = document.getElementById("character");
 
     if (!character) {
         return;
     }
 
-    character.className =
-        "character " +
-        game.selectedSkin;
+    const skinClasses = [
+        "classic",
+        "neon",
+        "cyber",
+        "galaxy",
+        "golden"
+    ];
+
+    character.classList.remove(...skinClasses);
+    character.classList.add(game.selectedSkin || "classic");
 }
 
 
@@ -84,38 +76,17 @@ function updateCharacterSkin() {
 // =========================================
 
 function click67() {
-
-    const earned =
-        game.clickPower *
-        game.multiplier;
-
+    const earned = game.clickPower * game.multiplier;
 
     game.coins += earned;
-
     game.totalEarned += earned;
-
     game.totalClicks++;
 
-
-    // Анимация персонажа
     animateCharacter();
-
-
-    // Опыт
     addExperience(1);
-
-
-    // Проверяем задания
     checkMissions();
-
-
-    // Проверяем достижения
     checkAchievements();
-
-
-    // Обновляем игру
     updateGame();
-
 }
 
 
@@ -124,33 +95,19 @@ function click67() {
 // =========================================
 
 function autoIncome() {
-
     if (game.autoPower <= 0) {
         return;
     }
 
-
-    const earned =
-        game.autoPower *
-        game.multiplier;
-
+    const earned = game.autoPower * game.multiplier;
 
     game.coins += earned;
-
     game.totalEarned += earned;
 
-
-    addExperience(
-        game.autoPower
-    );
-
-
+    addExperience(game.autoPower);
     checkMissions();
-
     checkAchievements();
-
     updateGame();
-
 }
 
 
@@ -159,73 +116,26 @@ function autoIncome() {
 // =========================================
 
 function updateGame() {
+    document.getElementById("coins").textContent = formatNumber(game.coins);
+    document.getElementById("level").textContent = game.level;
+    document.getElementById("perSecond").textContent = game.autoPower;
+    document.getElementById("clickPower").textContent =
+        game.clickPower * game.multiplier;
 
-    document.getElementById(
-        "coins"
-    ).textContent =
-        formatNumber(
-            game.coins
-        );
+    document.getElementById("clickCost").textContent =
+        formatNumber(getClickCost());
 
+    document.getElementById("autoCost").textContent =
+        formatNumber(getAutoCost());
 
-    document.getElementById(
-        "level"
-    ).textContent =
-        game.level;
+    document.getElementById("multiplierCost").textContent =
+        formatNumber(getMultiplierCost());
 
-
-    document.getElementById(
-        "perSecond"
-    ).textContent =
-        game.autoPower;
-
-
-    document.getElementById(
-        "clickPower"
-    ).textContent =
-        game.clickPower *
-        game.multiplier;
-
-
-    document.getElementById(
-        "clickCost"
-    ).textContent =
-        formatNumber(
-            getClickCost()
-        );
-
-
-    document.getElementById(
-        "autoCost"
-    ).textContent =
-        formatNumber(
-            getAutoCost()
-        );
-
-
-    document.getElementById(
-        "multiplierCost"
-    ).textContent =
-        formatNumber(
-            getMultiplierCost()
-        );
-
-
-    // Обновляем визуальный скин
     updateCharacterSkin();
-
-
-    // Обновляем интерфейс
     renderSkins();
-
     renderMissions();
-
     renderAchievements();
-
-
-    // Сохраняем игру
     saveGame();
-
 }
 
 
@@ -234,38 +144,19 @@ function updateGame() {
 // =========================================
 
 function formatNumber(number) {
-
     if (number < 1000) {
-
-        return Math.floor(
-            number
-        );
-
+        return Math.floor(number);
     }
-
 
     if (number < 1000000) {
-
-        return (
-            number / 1000
-        ).toFixed(1) + "K";
-
+        return (number / 1000).toFixed(1) + "K";
     }
-
 
     if (number < 1000000000) {
-
-        return (
-            number / 1000000
-        ).toFixed(1) + "M";
-
+        return (number / 1000000).toFixed(1) + "M";
     }
 
-
-    return (
-        number / 1000000000
-    ).toFixed(1) + "B";
-
+    return (number / 1000000000).toFixed(1) + "B";
 }
 
 
@@ -274,41 +165,20 @@ function formatNumber(number) {
 // =========================================
 
 function notify(message) {
-
-    const element =
-        document.getElementById(
-            "notification"
-        );
-
+    const element = document.getElementById("notification");
 
     if (!element) {
         return;
     }
 
+    element.textContent = message;
+    element.classList.add("show");
 
-    element.textContent =
-        message;
+    clearTimeout(notify.timer);
 
-
-    element.classList.add(
-        "show"
-    );
-
-
-    clearTimeout(
-        notify.timer
-    );
-
-
-    notify.timer =
-        setTimeout(() => {
-
-            element.classList.remove(
-                "show"
-            );
-
-        }, 1800);
-
+    notify.timer = setTimeout(() => {
+        element.classList.remove("show");
+    }, 1800);
 }
 
 
@@ -317,48 +187,21 @@ function notify(message) {
 // =========================================
 
 function claimDailyReward() {
+    const today = new Date().toISOString().slice(0, 10);
 
-    const today =
-        new Date()
-            .toISOString()
-            .slice(0, 10);
-
-
-    if (
-        game.lastDailyReward === today
-    ) {
-
-        notify(
-            "🎁 Ты уже получил бонус сегодня!"
-        );
-
+    if (game.lastDailyReward === today) {
+        notify("🎁 Ты уже получил бонус сегодня!");
         return;
     }
 
-
-    const reward =
-        500 +
-        game.level * 100;
-
+    const reward = 500 + game.level * 100;
 
     game.coins += reward;
-
     game.totalEarned += reward;
+    game.lastDailyReward = today;
 
-
-    game.lastDailyReward =
-        today;
-
-
-    notify(
-        "🎁 Получено +" +
-        reward +
-        " 67!"
-    );
-
-
+    notify("🎁 Получено +" + reward + " 67!");
     updateGame();
-
 }
 
 
@@ -366,94 +209,44 @@ function claimDailyReward() {
 // CLICK BUTTON
 // =========================================
 
-document
-    .getElementById("clickButton")
-    .addEventListener(
-        "click",
-        click67
-    );
+document.getElementById("clickButton").addEventListener("click", click67);
 
 
 // =========================================
 // SHOP BUTTONS
 // =========================================
 
-document
-    .getElementById("buyClick")
-    .addEventListener(
-        "click",
-        buyClickUpgrade
-    );
-
-
-document
-    .getElementById("buyAuto")
-    .addEventListener(
-        "click",
-        buyAutoUpgrade
-    );
-
-
-document
-    .getElementById("buyMultiplier")
-    .addEventListener(
-        "click",
-        buyMultiplierUpgrade
-    );
+document.getElementById("buyClick").addEventListener("click", buyClickUpgrade);
+document.getElementById("buyAuto").addEventListener("click", buyAutoUpgrade);
+document.getElementById("buyMultiplier").addEventListener("click", buyMultiplierUpgrade);
 
 
 // =========================================
 // DAILY REWARD BUTTON
 // =========================================
 
-document
-    .getElementById("dailyReward")
-    .addEventListener(
-        "click",
-        claimDailyReward
-    );
+document.getElementById("dailyReward").addEventListener("click", claimDailyReward);
 
 
 // =========================================
 // RESET GAME
 // =========================================
 
-document
-    .getElementById("resetGame")
-    .addEventListener(
-        "click",
-        () => {
+document.getElementById("resetGame").addEventListener("click", () => {
+    if (!confirm("Удалить весь прогресс?")) {
+        return;
+    }
 
-            if (
-                !confirm(
-                    "Удалить весь прогресс?"
-                )
-            ) {
-
-                return;
-
-            }
-
-
-            localStorage.removeItem(
-                SAVE_KEY
-            );
-
-
-            location.reload();
-
-        }
-    );
+    localStorage.removeItem(SAVE_KEY);
+    location.reload();
+});
 
 
 // =========================================
 // AUTO INCOME TIMER
 // =========================================
 
-setInterval(
-    autoIncome,
-    1000
-);
+setInterval(autoIncome, 1000);
 
 
 // =========================================
