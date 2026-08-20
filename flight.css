@@ -1,0 +1,118 @@
+#flightScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(4, 3, 12, .94);
+    backdrop-filter: blur(12px);
+}
+
+#flightScreen.open { display: flex; }
+
+.flight-box {
+    width: min(900px, 100%);
+    height: min(720px, 94vh);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 24px;
+    background: linear-gradient(145deg, rgba(31,24,57,.96), rgba(10,8,22,.98));
+    box-shadow: 0 25px 80px rgba(0,0,0,.5);
+}
+
+.flight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.flight-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 1000;
+}
+
+.flight-hud {
+    display: flex;
+    gap: 8px;
+}
+
+.flight-stat {
+    min-width: 95px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.05);
+    text-align: center;
+}
+
+.flight-stat span {
+    display: block;
+    color: #9892b5;
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+.flight-stat strong { color: #ffd34d; font-size: 15px; }
+
+#flightCanvas {
+    width: 100%;
+    flex: 1;
+    min-height: 300px;
+    display: block;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.08);
+    touch-action: none;
+    cursor: pointer;
+}
+
+.flight-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.flight-controls button,
+#openFlight {
+    border: 0;
+    border-radius: 14px;
+    padding: 12px 18px;
+    color: white;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+#openFlight {
+    width: 100%;
+    margin-top: 12px;
+    background: linear-gradient(135deg, #ff4fc3, #8157ff);
+    box-shadow: 0 8px 25px rgba(129,87,255,.25);
+}
+
+.flight-controls #restartFlight {
+    flex: 1;
+    background: linear-gradient(135deg, #966fff, #7046ed);
+}
+
+.flight-controls #closeFlight {
+    background: rgba(255,255,255,.08);
+}
+
+.flight-hint {
+    margin: 0;
+    color: #9892b5;
+    text-align: center;
+    font-size: 11px;
+}
+
+@media (max-width: 600px) {
+    #flightScreen { padding: 8px; }
+    .flight-box { height: 96vh; padding: 10px; border-radius: 18px; }
+    .flight-title { font-size: 18px; }
+    .flight-stat { min-width: 78px; padding: 6px 8px; }
+    .flight-stat strong { font-size: 13px; }
+}
