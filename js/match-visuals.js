@@ -1,50 +1,34 @@
 (() => {
-  const originalDrawMatch = window.drawMatch;
-  if (typeof originalDrawMatch !== 'function') return;
+  const originalFillText = CanvasRenderingContext2D.prototype.fillText;
+  const icons = {
+    '#8157ff': '★',
+    '#ff4fc3': '◆',
+    '#35e8ff': '✦',
+    '#ffd34d': '♛'
+  };
 
-  window.drawMatch = function(ctx) {
-    originalDrawMatch(ctx);
-    const s = window.miniState;
-    if (!s || !s.board || !s.cell) return;
+  CanvasRenderingContext2D.prototype.fillText = function(text, x, y, maxWidth) {
+    const canvas = this.canvas;
+    const isMatchCanvas = canvas && canvas.id === 'miniCanvas';
+    const color = String(this.fillStyle).toLowerCase();
 
-    const icons = ['★','◆','✦','♛'];
-    const colors = ['#ffffff','#fff7ff','#eaffff','#fffbe0'];
-    const pulse = 0.5 + 0.5 * Math.sin(performance.now() / 350);
+    if (isMatchCanvas && text === '67' && icons[color]) {
+      const icon = icons[color];
+      const oldFont = this.font;
+      const size = Math.max(18, parseInt(oldFont.match(/(\d+(?:\.\d+)?)px/)?.[1] || '18', 10) * 1.15);
 
-    ctx.save();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    for (let y = 0; y < s.n; y++) {
-      for (let x = 0; x < s.n; x++) {
-        const v = s.board[y][x];
-        if (v === null || v === undefined) continue;
-
-        const cx = s.offX + x * s.cell + s.cell / 2;
-        const cy = s.offY + y * s.cell + s.cell / 2;
-        const size = Math.max(18, s.cell * 0.30);
-
-        // Закрываем старую надпись 67 мягким внутренним кругом.
-        ctx.globalAlpha = 0.94;
-        ctx.fillStyle = ['#8157ff','#ff4fc3','#35e8ff','#ffd34d'][v];
-        ctx.beginPath();
-        ctx.arc(cx, cy, s.cell * 0.20, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Свой символ для каждого типа плитки.
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = colors[v];
-        ctx.font = `900 ${size}px Arial`;
-        ctx.fillText(icons[v], cx, cy + 1);
-
-        // Маленький живой блик.
-        ctx.globalAlpha = 0.25 + pulse * 0.25;
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(cx - s.cell * 0.08, cy - s.cell * 0.08, Math.max(2, s.cell * 0.035), 0, Math.PI * 2);
-        ctx.fill();
-      }
+      this.save();
+      this.font = `900 ${size}px Arial`;
+      this.textAlign = 'center';
+      this.textBaseline = 'middle';
+      this.shadowBlur = 8;
+      this.shadowColor = color;
+      this.fillStyle = '#ffffff';
+      originalFillText.call(this, icon, x, y, maxWidth);
+      this.restore();
+      return;
     }
-    ctx.restore();
+
+    originalFillText.call(this, text, x, y, maxWidth);
   };
 })();
