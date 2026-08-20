@@ -1,0 +1,60 @@
+/* 67 PREMIUM UI FINAL FIX */
+
+html,body{width:100%;min-height:100%;}
+body{padding-bottom:0!important;}
+.game{width:min(1180px,100%);margin:0 auto;padding:18px 18px calc(110px + env(safe-area-inset-bottom));}
+
+/* Stable home stage */
+.click-area{position:relative;min-height:570px!important;height:570px;display:flex!important;flex-direction:column;align-items:center!important;justify-content:center!important;padding:70px 20px 34px!important;isolation:isolate;}
+.click-area:before{z-index:-2;}
+.click-area:after{z-index:0;top:22px!important;}
+.character{position:relative!important;width:180px!important;height:250px!important;margin:0 0 12px!important;flex:0 0 250px!important;transform:scale(1)!important;transform-origin:center center!important;animation:premiumFloat 3s ease-in-out infinite!important;}
+.character.clicking{animation:premiumClick .28s ease-out!important;}
+.character-glow{z-index:-1!important;}
+.character-head,.character-body,.character-arm,.character-leg{pointer-events:none;}
+.coin-symbol{z-index:20!important;}
+.click-button{margin:8px 0 0!important;flex:0 0 auto!important;}
+.click-area>p{margin:10px 0 0!important;position:relative;z-index:10;}
+
+/* Proper coin language */
+.coin-symbol span,.coin-button-icon,.mini-coin,.brand-mark span{font-family:Arial,sans-serif;}
+.coin-button-icon{font-size:11px!important;}
+
+/* Quick actions */
+.home-quick{margin-top:18px!important;padding:22px!important;}
+.home-quick h2{margin-bottom:14px!important;}
+.quick-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px!important;}
+.quick-grid button{min-height:118px!important;padding:18px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;text-align:left!important;color:#fff!important;}
+.quick-grid button>b{font-size:15px!important;margin-top:8px!important;}
+.quick-grid button>small{display:block!important;margin-top:6px!important;color:#aaa3c0!important;line-height:1.4!important;font-size:10px!important;}
+
+/* All actionable controls stay above decorative layers */
+button,a,[role=button]{touch-action:manipulation;}
+button:disabled{opacity:.55;}
+
+/* Premium bottom navigation on mobile */
+@media(max-width:700px){
+ .game{padding:10px 10px calc(92px + env(safe-area-inset-bottom))!important;}
+ .tabs{position:fixed!important;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));top:auto!important;margin:0!important;padding:6px!important;z-index:1000!important;border-radius:22px!important;overflow-x:auto!important;display:flex!important;box-shadow:0 18px 55px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.08)!important;}
+ .tab{min-width:78px!important;min-height:54px!important;flex:1 0 78px!important;border-radius:16px!important;font-size:12px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;}
+ .tab span{font-size:9px!important;font-weight:800!important;}
+ .click-area{min-height:500px!important;height:500px!important;padding-top:58px!important;}
+ .character{width:170px!important;height:238px!important;flex-basis:238px!important;margin-bottom:8px!important;transform:scale(.94)!important;}
+ .click-button{width:min(230px,88vw)!important;height:66px!important;}
+ .quick-grid{grid-template-columns:1fr!important;gap:10px!important;}
+ .quick-grid button{min-height:82px!important;display:grid!important;grid-template-columns:44px 1fr!important;grid-template-rows:auto auto!important;column-gap:10px!important;align-items:center!important;}
+ .quick-grid button:first-letter{font-size:20px;}
+ .quick-grid button>b,.quick-grid button>small{grid-column:2;}
+ .quick-grid button>b{margin:0!important;}
+ .quick-grid button>small{margin:2px 0 0!important;}
+}
+
+@media(max-width:380px){
+ .tab{min-width:70px!important;flex-basis:70px!important;}
+ .tab span{font-size:8px!important;}
+ .click-area{min-height:470px!important;height:470px!important;}
+ .character{transform:scale(.84)!important;}
+}
+
+@keyframes premiumFloat{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1) translateY(-7px)}}
+@keyframes premiumClick{0%{transform:scale(1) translateY(0)}35%{transform:scale(.9,.95) rotate(-2deg)}70%{transform:scale(1.04,1.02) rotate(1deg)}100%{transform:scale(1) translateY(0)}}
