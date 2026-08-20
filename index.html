@@ -8,28 +8,16 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="skins.css">
     <link rel="stylesheet" href="flight.css">
+    <link rel="stylesheet" href="features.css">
 </head>
-
 <body>
-
 <div class="game">
-
     <header>
         <h1>67 CLICKER</h1>
-
         <div class="stats">
-            <div>
-                <span>67</span>
-                <strong id="coins">0</strong>
-            </div>
-            <div>
-                <span>Уровень</span>
-                <strong id="level">1</strong>
-            </div>
-            <div>
-                <span>67/сек</span>
-                <strong id="perSecond">0</strong>
-            </div>
+            <div><span>67</span><strong id="coins">0</strong></div>
+            <div><span>Уровень</span><strong id="level">1</strong></div>
+            <div><span>67/сек</span><strong id="perSecond">0</strong></div>
         </div>
     </header>
 
@@ -37,91 +25,50 @@
         <section class="click-area">
             <div id="character" class="character classic">
                 <div class="character-glow"></div>
-                <div class="character-head">
-                    <div class="eye left"></div>
-                    <div class="eye right"></div>
-                    <div class="smile"></div>
-                </div>
+                <div class="character-head"><div class="eye left"></div><div class="eye right"></div><div class="smile"></div></div>
                 <div class="character-body"><div class="symbol">67</div></div>
-                <div class="character-arm left-arm"></div>
-                <div class="character-arm right-arm"></div>
-                <div class="character-leg left-leg"></div>
-                <div class="character-leg right-leg"></div>
+                <div class="character-arm left-arm"></div><div class="character-arm right-arm"></div>
+                <div class="character-leg left-leg"></div><div class="character-leg right-leg"></div>
                 <div class="skin-particles"></div>
             </div>
-
             <button id="clickButton" class="click-button">67</button>
             <p>Сила клика: <b id="clickPower">1</b></p>
         </section>
 
-        <section class="panel">
-            <h2>✈️ Мини-игры</h2>
-            <button id="openFlight">✈️ ПОЛЁТ 67 — играть</button>
-        </section>
+        <section class="panel"><h2>✈️ Мини-игры</h2><button id="openFlight">✈️ ПОЛЁТ 67 — играть</button></section>
 
-        <section class="panel">
-            <h2>🛒 Магазин</h2>
+        <section class="panel"><h2>🛒 Магазин</h2>
             <button id="buyClick">Улучшить клик — <b id="clickCost">25</b> 67</button>
             <button id="buyAuto">Автокликер — <b id="autoCost">100</b> 67</button>
             <button id="buyMultiplier">Улучшить множитель — <b id="multiplierCost">500</b> 67</button>
         </section>
 
-        <section class="panel">
-            <h2>🎨 Скины</h2>
-            <div id="skins"></div>
-        </section>
+        <section class="panel"><h2>🎨 Скины</h2><div id="skins"></div></section>
+        <section class="panel"><h2>🎯 Задания</h2><div id="missions"></div></section>
+        <section class="panel"><h2>🏆 Достижения</h2><div id="achievements"></div></section>
 
-        <section class="panel">
-            <h2>🎯 Задания</h2>
-            <div id="missions"></div>
-        </section>
+        <section class="panel feature-panel"><h2>📅 Ежедневные задания</h2><div id="dailyQuests"></div></section>
+        <section class="panel feature-panel"><h2>⚡ Бустеры</h2><div id="boosters"></div></section>
+        <section class="panel feature-panel"><h2>🗺️ Мир 67</h2><div id="worldMap" class="world-map"></div></section>
+        <section class="panel feature-panel"><h2>👑 Коллекция</h2><div id="collection" class="collection"></div></section>
+        <section class="panel feature-panel"><h2>🏅 Рекорды</h2><div id="records" class="records"></div></section>
 
-        <section class="panel">
-            <h2>🏆 Достижения</h2>
-            <div id="achievements"></div>
-        </section>
-
-        <section class="panel">
-            <h2>🎁 Ежедневный бонус</h2>
-            <button id="dailyReward">Получить бонус</button>
-            <p id="dailyStatus"></p>
-        </section>
-
+        <section class="panel"><h2>🎁 Ежедневный бонус</h2><button id="dailyReward">Получить бонус</button><p id="dailyStatus"></p></section>
+        <section class="panel settings-panel"><h2>⚙️ Настройки</h2><label><span>🔊 Звуки</span><input id="soundToggle" type="checkbox"></label></section>
         <button id="resetGame" class="reset">Сбросить прогресс</button>
     </main>
 </div>
 
 <div id="flightScreen">
     <div class="flight-box">
-        <div class="flight-header">
-            <h2 class="flight-title">✈️ Полёт 67</h2>
-            <div class="flight-hud">
-                <div class="flight-stat"><span>Дистанция</span><strong id="flightScore">0 м</strong></div>
-                <div class="flight-stat"><span>Рекорд</span><strong id="flightBest">0 м</strong></div>
-            </div>
-        </div>
-
+        <div class="flight-header"><h2 class="flight-title">✈️ Полёт 67</h2><div class="flight-hud"><div class="flight-stat"><span>Дистанция</span><strong id="flightScore">0 м</strong></div><div class="flight-stat"><span>Рекорд</span><strong id="flightBest">0 м</strong></div></div></div>
         <canvas id="flightCanvas"></canvas>
-
         <p class="flight-hint">Нажимай или кликай по экрану, чтобы 67 летел вверх. Собирай 67 и избегай препятствий.</p>
-
-        <div class="flight-controls">
-            <button id="restartFlight">🚀 Начать полёт</button>
-            <button id="closeFlight">← Назад</button>
-        </div>
+        <div class="flight-controls"><button id="restartFlight">🚀 Начать полёт</button><button id="closeFlight">← Назад</button></div>
     </div>
 </div>
-
 <div id="notification"></div>
 
-<script src="js/save.js"></script>
-<script src="js/player.js"></script>
-<script src="js/shop.js"></script>
-<script src="js/skins.js"></script>
-<script src="js/missions.js"></script>
-<script src="js/achievements.js"></script>
-<script src="js/game.js"></script>
-<script src="js/flight.js"></script>
-
+<script src="js/save.js"></script><script src="js/player.js"></script><script src="js/shop.js"></script><script src="js/skins.js"></script><script src="js/missions.js"></script><script src="js/achievements.js"></script><script src="js/game.js"></script><script src="js/flight.js"></script><script src="js/features.js"></script>
 </body>
 </html>
